@@ -1,0 +1,4 @@
+LIBRARY "ClearBarTAP"
+EXPORTS
+    DllGetClassObject
+    DllCanUnloadNow
