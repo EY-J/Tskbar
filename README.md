@@ -1,47 +1,94 @@
-# ClearBar v2.3.0
+# Tskbar V1
 
-Experimental native Windows 11 taskbar customizer. ClearBar uses C++/WinRT and Microsoft's XAML Diagnostics API to load a small TAP DLL into Explorer. It does not require the .NET SDK.
+Tskbar is an experimental native Windows 11 taskbar customizer built with C++/WinRT and Microsoft's XAML Diagnostics API. It allows users to customize the appearance of the Windows taskbar without requiring the .NET SDK.
 
-## Install and choose an appearance
+## Features
 
-1. Extract the project and close other taskbar styling tools.
-<<<<<<< HEAD
-2. Double-click `install.cmd` and choose an appearance.
-3. The installer uses the included native x64 binaries when build tools are unavailable, so end users do not need Visual Studio. If Visual Studio C++ Build Tools are detected, it attempts to rebuild the updated source. A failed automatic rebuild restores the original binaries and displays a warning rather than silently leaving a half-built binary pair.
-4. The installer copies the selected binaries to `%LOCALAPPDATA%\ClearBar`, enables auto-start, and waits for the taskbar change to be confirmed. If installation fails, the error remains visible in the Command Prompt.
+- **Clear** — Makes the taskbar fully transparent.
+- **Blur - Light** — Applies a subtle acrylic blur with minimal dark tint.
+- **Blur - Medium** — Applies a more noticeable acrylic blur.
+- **Blur - Strong** — Applies acrylic blur with a stronger tint while remaining translucent.
+- **Windows Default** — Restores the original taskbar appearance while keeping Tskbar installed.
 
-To rebuild manually, install Visual Studio C++ x64 Build Tools and the Windows SDK, then run `build.cmd`. To require a rebuild during installation, open Command Prompt in the project folder and run `set CLEARBAR_REBUILD=1 && install.cmd`. A source-level fix is active in the installed app only after a successful rebuild; the bundled prebuilt binaries are retained as a fallback for machines without build tools.
-=======
-2. Run `install.cmd`.
-3. Choose an appearance. The installer builds the native x64 binaries with Visual Studio Build Tools and the Windows SDK, installs them in `%LOCALAPPDATA%\ClearBar`, enables auto-start, and waits for the taskbar to be updated.
->>>>>>> origin/main
+Additional features include:
 
-| Mode | Appearance |
-| --- | --- |
-| Clear | Fully transparent, matching the v2.2.2 opacity behavior. |
-| Blur - Light | Noticeable but restrained acrylic softening with very little dark tint. |
-| Blur - Medium | Clearly visible, balanced acrylic blur; close to the previous Light preset. |
-| Blur - Strong | Acrylic blur with a stronger tint while remaining translucent. |
-| Windows Default | Restores the original taskbar XAML fill, stroke, and opacity. ClearBar remains installed. |
+- Change taskbar appearance.
+- Repair or reinstall the application.
+- Check installation status.
+- Automatically start the controller with Windows.
+- Save and reapply the selected appearance after Explorer restarts.
+- Uninstall the application and restore the normal taskbar.
 
-Run `install.cmd` again to change appearance, repair the installation, check status, or uninstall. Changing appearance saves the setting and applies it without rebuilding or restarting Explorer. Repair and upgrades restart Explorer once so it loads the new TAP DLL.
+## Installation
 
-The selection is stored in `%LOCALAPPDATA%\ClearBar\clearbar.ini` as `Mode=Clear`, `BlurLight`, `BlurMedium`, `BlurStrong`, or `Default`. ClearBar reads it at startup and the TAP checks for changes while Explorer is running. If Explorer restarts, the controller reconnects and reapplies the saved mode. A missing file falls back to Clear for compatibility with older installations; an invalid value falls back to Windows Default.
+1. Download the latest Tskbar ZIP from the [GitHub Releases](https://github.com/EY-J/Tskbar/releases) page.
+2. Extract the downloaded ZIP file.
+3. Close other taskbar customization tools.
+4. Run `install.cmd`.
+5. Choose your preferred taskbar appearance.
+6. Follow the instructions displayed in the Command Prompt.
 
-## Tools and troubleshooting
+The installer can use the included native x64 binaries when Visual Studio C++ Build Tools are unavailable. When compatible build tools are detected, it attempts to rebuild the source code before installation.
 
-- `build.cmd` compiles the controller and TAP DLL manually.
-- `status.cmd` displays the saved setting, controller process, Run entry, applied state, and recent log messages.
-- `uninstall.cmd` removes ClearBar and restarts Explorer to unload the TAP DLL and restore the normal taskbar.
+If the automatic rebuild fails, the installer attempts to restore the bundled binaries and displays a warning.
 
-<<<<<<< HEAD
-If installation reports that it cannot confirm a taskbar change, run `status.cmd` and inspect `%LOCALAPPDATA%\ClearBar\clearbar.log`. If an automatic source rebuild fails, check that Visual Studio C++ x64 Build Tools and Windows SDK components are installed. The installer restores the bundled binaries after an automatic build failure; run with `CLEARBAR_REBUILD=1` if you want a failed rebuild to stop installation instead of falling back.
-=======
-If installation reports that it cannot confirm a taskbar change, run `status.cmd` and inspect `%LOCALAPPDATA%\ClearBar\clearbar.log`. Build failures usually mean that Visual Studio C++ x64 Build Tools or Windows SDK components are missing.
->>>>>>> origin/main
+## Changing Taskbar Appearance
 
-## Windows limitations
+Run `install.cmd` again to access the following options:
 
-ClearBar requires Windows 11 build 22000 or newer. It changes only `BackgroundFill` and `BackgroundStroke` inside `TaskbarFrame`; these taskbar XAML names are internal Windows details and can change after a Windows update. Acrylic is rendered by Windows with a fixed blur radius in this API. The presets vary the acrylic brush's opacity, tint, and luminosity instead of claiming to set a blur radius. Light blends less acrylic than Medium while keeping its dark tint low, so the blur remains visible without turning the taskbar into a dark strip. Windows may render the acrylic fallback when Transparency effects are disabled, power saving is active, or the compositor cannot provide the effect. In those conditions, the visual result cannot be guaranteed to stay translucent.
+1. Change appearance
+2. Repair / reinstall
+3. Check status
+4. Uninstall
+5. Exit
 
-The implementation follows the native Windows XAML [AcrylicBrush API](https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.media.acrylicbrush) and the taskbar's existing transparent XAML surface. The [XAML Diagnostics API](https://learn.microsoft.com/en-us/windows/win32/api/xamlom/) is documented, while Explorer's taskbar tree is not a stable public extension point.
+Changing the appearance saves the selected setting and attempts to apply it without rebuilding the application. Repair and reinstall operations may restart Windows Explorer so it can load the updated components.
+
+## Requirements
+
+- Windows 11, build 22000 or newer.
+- A compatible 64-bit Windows environment.
+- Administrator permissions may be required for certain operations.
+- Visual Studio C++ x64 Build Tools and the Windows SDK are needed to rebuild the native source code manually.
+
+End users generally do not need Visual Studio when the bundled binaries are available.
+
+## Tools and Troubleshooting
+
+The project includes the following utility scripts:
+
+- `install.cmd` — Install, change appearance, repair, or uninstall Tskbar.
+- `build.cmd` — Manually compile the controller and taskbar customization DLL.
+- `status.cmd` — Display the saved setting, controller process, startup entry, applied state, and recent log messages.
+- `uninstall.cmd` — Remove the application and restart Explorer to unload the customization DLL and restore the normal taskbar.
+
+### If Installation Fails
+
+1. Run `install.cmd` again.
+2. Select **Check status** to inspect the current installation.
+3. If necessary, select **Repair / reinstall**.
+4. Read any error messages displayed in the Command Prompt.
+5. If a build fails, verify that the required Visual Studio C++ x64 Build Tools and Windows SDK components are installed.
+
+If the installer cannot confirm that a taskbar change was applied, check the application logs.
+
+**Technical note:** The current source may still use the original internal `ClearBar` folder name and build environment variable. Changing the README branding alone does not rename those internal paths or the compiled binaries.
+
+## Windows Compatibility and Limitations
+
+Tskbar modifies internal Windows taskbar XAML components. These are implementation details rather than a stable public taskbar customization interface, so compatibility may vary across Windows updates.
+
+The acrylic effect is rendered by Windows. Its appearance can vary depending on system settings, transparency effects, power-saving conditions, and compositor behavior. A consistent translucent appearance cannot be guaranteed on every system.
+
+Tskbar is an experimental project and should be tested before being used on a primary system.
+
+## Version
+
+**Current Version: V1**
+
+Tskbar V1 is the initial release. Future versions may include bug fixes, compatibility improvements, and additional customization features.
+
+## References
+
+- [Microsoft AcrylicBrush API](https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.media.acrylicbrush)
+- [Microsoft XAML Diagnostics API](https://learn.microsoft.com/en-us/windows/win32/api/xamlom/)
