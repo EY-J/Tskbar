@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 setlocal EnableExtensions
 set "APPDIR=%LOCALAPPDATA%\ClearBar"
 reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v ClearBar /f >nul 2>&1

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 @echo off
-=======
-﻿@echo off
->>>>>>> origin/main
 setlocal EnableExtensions
 cd /d "%~dp0"
 title ClearBar v2.3 Builder

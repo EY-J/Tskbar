@@ -1,14 +1,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-<<<<<<< HEAD
 
 // windows.h defines GetCurrentTime() as a macro; undefine it before
 // including XAML SDK headers that declare a GetCurrentTime member.
 #ifdef GetCurrentTime
 #undef GetCurrentTime
 #endif
-=======
->>>>>>> origin/main
 #include <Windows.UI.Xaml.h>
 #include <xamlom.h>
 #include <filesystem>
@@ -70,11 +67,7 @@ HRESULT Inject(DWORD pid){
     if(!fn){ HRESULT hr=HRESULT_FROM_WIN32(GetLastError()); FreeLibrary(x); return hr; }
 
     HRESULT hr=HRESULT_FROM_WIN32(ERROR_NOT_FOUND);
-<<<<<<< HEAD
     for(int i=1;i<=10000;i++){
-=======
-    for(int i=1;i<=64;i++){
->>>>>>> origin/main
         wchar_t name[64]{};
         swprintf_s(name,L"VisualDiagConnection%d",i);
         hr=fn(name,pid,L"Windows.UI.Xaml.dll",tap.c_str(),CLSID_ClearBarTAP,nullptr);

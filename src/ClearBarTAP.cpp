@@ -1,47 +1,29 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-<<<<<<< HEAD
 
 // windows.h defines GetCurrentTime() as a macro; undefine it before
 // including XAML SDK headers that declare a GetCurrentTime member.
 #ifdef GetCurrentTime
 #undef GetCurrentTime
 #endif
-=======
->>>>>>> origin/main
 #include <oleauto.h>
 #include <ocidl.h>
 #include <inspectable.h>
 #include <Windows.UI.Xaml.h>
 #include <xamlom.h>
 
-<<<<<<< HEAD
-=======
-#ifdef GetCurrentTime
-#undef GetCurrentTime
-#endif
-
->>>>>>> origin/main
 #include <winrt/base.h>
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.UI.Xaml.h>
 #include <winrt/Windows.UI.Xaml.Controls.h>
 #include <winrt/Windows.UI.Xaml.Media.h>
 #include <winrt/Windows.UI.Xaml.Shapes.h>
-<<<<<<< HEAD
 #include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <vector>
 #include <string_view>
 #include <utility>
-=======
-#include <filesystem>
-#include <fstream>
-#include <thread>
-#include <vector>
-#include <string_view>
->>>>>>> origin/main
 #include "common.h"
 #include "TaskbarAppearance.h"
 
@@ -94,15 +76,11 @@ struct Watcher:winrt::implements<Watcher,IVisualTreeServiceCallback2,winrt::non_
     wux::DispatcherTimer timer{nullptr};
     winrt::event_token tickToken{};
     TaskbarMode mode{};
-<<<<<<< HEAD
     bool advised{};
-=======
->>>>>>> origin/main
 
     explicit Watcher(winrt::com_ptr<IXamlDiagnostics> d):diag(std::move(d)),mode(LoadMode(tapModule).mode){
         svc=diag.as<IVisualTreeService3>();
         if (!LoadMode(tapModule).valid) LogTap(L"Missing or invalid configuration; using safe fallback");
-<<<<<<< HEAD
     }
 
     HRESULT Start() noexcept {
@@ -120,27 +98,17 @@ struct Watcher:winrt::implements<Watcher,IVisualTreeServiceCallback2,winrt::non_
             LogTap(L"Visual tree subscription raised an exception");
             return hr;
         }
-=======
-        std::thread([self=get_strong()]{
-            const HRESULT hr=self->svc->AdviseVisualTreeChange(self.get());
-            if (FAILED(hr)) LogTap(L"Visual tree subscription failed: " + std::to_wstring(static_cast<unsigned long>(hr)));
-        }).detach();
->>>>>>> origin/main
     }
 
     void Stop() noexcept {
         try {
             if (timer) { timer.Stop(); timer.Tick(tickToken); timer=nullptr; }
         } catch (...) { LogTap(L"Could not stop appearance timer cleanly"); }
-<<<<<<< HEAD
         if(svc && advised) {
             try { svc->UnadviseVisualTreeChange(this); }
             catch (...) { LogTap(L"Could not unregister visual tree callback cleanly"); }
         }
         advised=false;
-=======
-        if(svc) svc->UnadviseVisualTreeChange(this);
->>>>>>> origin/main
         svc=nullptr; diag=nullptr;
     }
 
@@ -285,11 +253,8 @@ struct Tap:winrt::implements<Tap,IObjectWithSite,winrt::non_agile>{
             if(s){
                 site.copy_from(s);
                 watcher=winrt::make_self<Watcher>(site.as<IXamlDiagnostics>());
-<<<<<<< HEAD
                 const HRESULT hr=watcher->Start();
                 if(FAILED(hr)) { watcher->Stop(); watcher=nullptr; return hr; }
-=======
->>>>>>> origin/main
             }
             return S_OK;
         }catch(...){ return winrt::to_hresult(); }
