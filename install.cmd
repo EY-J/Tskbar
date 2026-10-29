@@ -3,6 +3,7 @@ setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 title ClearBar v2.3 Installer
 
+<<<<<<< HEAD
 rem Keep errors visible when the installer is launched by double-clicking.
 call :MAIN
 set "RESULT=%ERRORLEVEL%"
@@ -15,6 +16,8 @@ if not "%RESULT%"=="0" (
 exit /b %RESULT%
 
 :MAIN
+=======
+>>>>>>> origin/main
 set "APPDIR=%LOCALAPPDATA%\ClearBar"
 set "RUNKEY=HKCU\Software\Microsoft\Windows\CurrentVersion\Run"
 set "MODE=Clear"
@@ -133,6 +136,7 @@ call :WAIT_FOR_APPLY
 exit /b !ERRORLEVEL!
 
 :BUILD_IF_NEEDED
+<<<<<<< HEAD
 if /I "%CLEARBAR_REBUILD%"=="1" goto :ATTEMPT_BUILD
 if not exist "build\ClearBar.exe" goto :ATTEMPT_BUILD
 if not exist "build\ClearBarTAP.dll" goto :ATTEMPT_BUILD
@@ -186,6 +190,22 @@ exit /b 1
 echo Using the bundled ClearBar binaries. Visual Studio Build Tools are not required.
 exit /b 0
 
+=======
+echo Building ClearBar v2.3...
+call "%~dp0build.cmd"
+if errorlevel 1 (
+    echo ERROR: Build failed. Check the compiler output above.
+    exit /b 1
+)
+if not exist "build\ClearBar.exe" goto :MISSING_BINARY
+if not exist "build\ClearBarTAP.dll" goto :MISSING_BINARY
+exit /b 0
+
+:MISSING_BINARY
+echo ERROR: Build finished without both required binaries.
+exit /b 1
+
+>>>>>>> origin/main
 :CHECK_WINDOWS
 if not defined CHECK_EXE set "CHECK_EXE=%APPDIR%\ClearBar.exe"
 start /wait "" "!CHECK_EXE!" --supported
@@ -214,7 +234,11 @@ exit /b 0
 :WAIT_FOR_APPLY
 echo Applying !LABEL! appearance...
 for /l %%I in (1,1,60) do (
+<<<<<<< HEAD
     timeout /t 1 /nobreak >nul
+=======
+    ping -n 2 127.0.0.1 >nul
+>>>>>>> origin/main
     start /wait "" "%APPDIR%\ClearBar.exe" --check !MODE!
     if not errorlevel 1 goto :SUCCESS
 )
