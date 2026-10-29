@@ -5,8 +5,16 @@ Experimental native Windows 11 taskbar customizer. ClearBar uses C++/WinRT and M
 ## Install and choose an appearance
 
 1. Extract the project and close other taskbar styling tools.
+<<<<<<< HEAD
+2. Double-click `install.cmd` and choose an appearance.
+3. The installer uses the included native x64 binaries when build tools are unavailable, so end users do not need Visual Studio. If Visual Studio C++ Build Tools are detected, it attempts to rebuild the updated source. A failed automatic rebuild restores the original binaries and displays a warning rather than silently leaving a half-built binary pair.
+4. The installer copies the selected binaries to `%LOCALAPPDATA%\ClearBar`, enables auto-start, and waits for the taskbar change to be confirmed. If installation fails, the error remains visible in the Command Prompt.
+
+To rebuild manually, install Visual Studio C++ x64 Build Tools and the Windows SDK, then run `build.cmd`. To require a rebuild during installation, open Command Prompt in the project folder and run `set CLEARBAR_REBUILD=1 && install.cmd`. A source-level fix is active in the installed app only after a successful rebuild; the bundled prebuilt binaries are retained as a fallback for machines without build tools.
+=======
 2. Run `install.cmd`.
 3. Choose an appearance. The installer builds the native x64 binaries with Visual Studio Build Tools and the Windows SDK, installs them in `%LOCALAPPDATA%\ClearBar`, enables auto-start, and waits for the taskbar to be updated.
+>>>>>>> origin/main
 
 | Mode | Appearance |
 | --- | --- |
@@ -26,7 +34,11 @@ The selection is stored in `%LOCALAPPDATA%\ClearBar\clearbar.ini` as `Mode=Clear
 - `status.cmd` displays the saved setting, controller process, Run entry, applied state, and recent log messages.
 - `uninstall.cmd` removes ClearBar and restarts Explorer to unload the TAP DLL and restore the normal taskbar.
 
+<<<<<<< HEAD
+If installation reports that it cannot confirm a taskbar change, run `status.cmd` and inspect `%LOCALAPPDATA%\ClearBar\clearbar.log`. If an automatic source rebuild fails, check that Visual Studio C++ x64 Build Tools and Windows SDK components are installed. The installer restores the bundled binaries after an automatic build failure; run with `CLEARBAR_REBUILD=1` if you want a failed rebuild to stop installation instead of falling back.
+=======
 If installation reports that it cannot confirm a taskbar change, run `status.cmd` and inspect `%LOCALAPPDATA%\ClearBar\clearbar.log`. Build failures usually mean that Visual Studio C++ x64 Build Tools or Windows SDK components are missing.
+>>>>>>> origin/main
 
 ## Windows limitations
 

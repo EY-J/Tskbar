@@ -3,6 +3,21 @@ setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 title ClearBar v2.3 Installer
 
+<<<<<<< HEAD
+rem Keep errors visible when the installer is launched by double-clicking.
+call :MAIN
+set "RESULT=%ERRORLEVEL%"
+if not "%RESULT%"=="0" (
+    echo.
+    echo ClearBar installation stopped with error code %RESULT%.
+    echo Review the message above, then press any key to close this window.
+    pause >nul
+)
+exit /b %RESULT%
+
+:MAIN
+=======
+>>>>>>> origin/main
 set "APPDIR=%LOCALAPPDATA%\ClearBar"
 set "RUNKEY=HKCU\Software\Microsoft\Windows\CurrentVersion\Run"
 set "MODE=Clear"
@@ -121,6 +136,61 @@ call :WAIT_FOR_APPLY
 exit /b !ERRORLEVEL!
 
 :BUILD_IF_NEEDED
+<<<<<<< HEAD
+if /I "%CLEARBAR_REBUILD%"=="1" goto :ATTEMPT_BUILD
+if not exist "build\ClearBar.exe" goto :ATTEMPT_BUILD
+if not exist "build\ClearBarTAP.dll" goto :ATTEMPT_BUILD
+
+set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+if not exist "%VSWHERE%" goto :USE_BUNDLED
+
+echo Visual Studio detected. Rebuilding the updated source before installation...
+
+:ATTEMPT_BUILD
+set "HAD_BINARIES=0"
+if exist "build\ClearBar.exe" if exist "build\ClearBarTAP.dll" (
+    copy /Y "build\ClearBar.exe" "build\ClearBar.exe.bak" >nul
+    if errorlevel 1 goto :BACKUP_FAILED
+    copy /Y "build\ClearBarTAP.dll" "build\ClearBarTAP.dll.bak" >nul
+    if errorlevel 1 goto :BACKUP_FAILED
+    set "HAD_BINARIES=1"
+)
+
+echo Building ClearBar v2.3...
+call "%~dp0build.cmd"
+if errorlevel 1 goto :BUILD_FAILED
+if not exist "build\ClearBar.exe" goto :BUILD_FAILED
+if not exist "build\ClearBarTAP.dll" goto :BUILD_FAILED
+
+del /F /Q "build\ClearBar.exe.bak" "build\ClearBarTAP.dll.bak" >nul 2>&1
+echo Source build completed successfully.
+exit /b 0
+
+:BACKUP_FAILED
+echo WARNING: Could not back up the bundled binaries; skipping the automatic rebuild.
+del /F /Q "build\ClearBar.exe.bak" "build\ClearBarTAP.dll.bak" >nul 2>&1
+if /I "%CLEARBAR_REBUILD%"=="1" exit /b 1
+goto :USE_BUNDLED
+
+:BUILD_FAILED
+if "!HAD_BINARIES!"=="1" (
+    copy /Y "build\ClearBar.exe.bak" "build\ClearBar.exe" >nul 2>&1
+    copy /Y "build\ClearBarTAP.dll.bak" "build\ClearBarTAP.dll" >nul 2>&1
+    del /F /Q "build\ClearBar.exe.bak" "build\ClearBarTAP.dll.bak" >nul 2>&1
+    if /I not "%CLEARBAR_REBUILD%"=="1" (
+        echo WARNING: The source rebuild failed. The original bundled binaries were restored.
+        echo The installer will continue, but source-level fixes require a successful rebuild.
+        exit /b 0
+    )
+)
+echo ERROR: Build failed. Install Visual Studio C++ x64 Build Tools and the Windows SDK, then retry.
+exit /b 1
+
+:USE_BUNDLED
+echo Using the bundled ClearBar binaries. Visual Studio Build Tools are not required.
+exit /b 0
+
+=======
 echo Building ClearBar v2.3...
 call "%~dp0build.cmd"
 if errorlevel 1 (
@@ -135,6 +205,7 @@ exit /b 0
 echo ERROR: Build finished without both required binaries.
 exit /b 1
 
+>>>>>>> origin/main
 :CHECK_WINDOWS
 if not defined CHECK_EXE set "CHECK_EXE=%APPDIR%\ClearBar.exe"
 start /wait "" "!CHECK_EXE!" --supported
@@ -163,7 +234,11 @@ exit /b 0
 :WAIT_FOR_APPLY
 echo Applying !LABEL! appearance...
 for /l %%I in (1,1,60) do (
+<<<<<<< HEAD
+    timeout /t 1 /nobreak >nul
+=======
     ping -n 2 127.0.0.1 >nul
+>>>>>>> origin/main
     start /wait "" "%APPDIR%\ClearBar.exe" --check !MODE!
     if not errorlevel 1 goto :SUCCESS
 )
